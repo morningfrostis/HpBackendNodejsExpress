@@ -2,44 +2,44 @@ const db = require("../models");
 const User = db.user;
 const Data = db.data;
 
-export const getUserById = async (id) => {
+export const getUserById = async (id: string) => {
   const user = await User.findByPk(id);
   delete user.password;
   return user;
 };
 
-export const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email: string) => {
   const user = await User.findOne({
     where: { email: email },
   });
   return user;
 };
 
-export const toggleNasaToFavorite = async ({ userId, roverId }) => {
-  let user = await User.findByPk(userId, {
-    attributes: { exclude: ["password", "salt"] },
-    include: {
-      model: db.data,
-      as: "favorites",
-    },
-  });
-  console.log("PREV", user);
-  let currentFavList = user.favorites.map((item) => item.id) || [];
+// export const toggleNasaToFavorite = async ({ userId, roverId }) => {
+//   let user = await User.findByPk(userId, {
+//     attributes: { exclude: ["password", "salt"] },
+//     include: {
+//       model: db.data,
+//       as: "favorites",
+//     },
+//   });
+//   console.log("PREV", user);
+//   let currentFavList = user.favorites.map((item) => item.id) || [];
 
-  const existed = currentFavList.includes(roverId);
+//   const existed = currentFavList.includes(roverId);
 
-  let isAdded = false;
-  if (!existed) {
-    const rover = await Data.findByPk(roverId);
-    if (!rover) {
-      throw new Error("Rover not found");
-    }
-    user.addFavorites(rover);
-    isAdded = true;
-  } else {
-    const newList = currentFavList.filter((item) => item !== roverId);
-    user.setFavorites(newList);
-  }
+//   let isAdded = false;
+//   if (!existed) {
+//     const rover = await Data.findByPk(roverId);
+//     if (!rover) {
+//       throw new Error("Rover not found");
+//     }
+//     user.addFavorites(rover);
+//     isAdded = true;
+//   } else {
+//     const newList = currentFavList.filter((item) => item !== roverId);
+//     user.setFavorites(newList);
+//   }
 
-  return { user, isAdded };
-};
+//   return { user, isAdded };
+// };

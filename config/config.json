@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "harrypotter",
+    "password": "harrypotter",
+    "database": "harrypotter",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
