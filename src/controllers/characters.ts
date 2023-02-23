@@ -1,30 +1,43 @@
 import { request, response } from "express";
 
 const db = require("../models");
-const Data = db.data;
+const Characters = db.data;
 
 export const getCharacters = async () => {
-  const result = await Data.findAll(request.body);
+  const result = await Characters.findAll(request.body);
   return result;
 };
 
-export const getCharactersById = async (id) => {
-  const result = await Data.findByPk(id);
+export const getCharactersById = async (id: string) => {
+  const result = await Characters.findByPk(id);
   return result;
 };
 
 export const createCharacters = async ({
+  //@ts-ignore
   idNasa,
+  //@ts-ignore
   camera,
+  //@ts-ignore
   img_src,
+  //@ts-ignore
   earth_date,
 }) => {
-  const result = await Data.create({ idNasa, camera, img_src, earth_date });
+  const result = await Characters.create({
+    //@ts-ignore
+    idNasa,
+    //@ts-ignore
+    camera,
+    //@ts-ignore
+    img_src,
+    //@ts-ignore
+    earth_date,
+  });
   return result;
 };
-
-export const updateCharacters = async (id, data) => {
-  const result = await Data.update(
+//@ts-ignore
+export const updateCharacters = async (id: string, data) => {
+  const result = await Characters.update(
     data,
     {
       where: {
@@ -39,12 +52,11 @@ export const updateCharacters = async (id, data) => {
   return result;
 };
 
-export const removeCharacters = async (id) => {
-  await Data.destroy({
+export const removeCharacters = async (id: string) => {
+  await Characters.destroy({
     where: {
       id,
     },
   });
   return true;
 };
-

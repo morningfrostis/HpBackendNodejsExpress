@@ -8,21 +8,16 @@ export const getStaff = async () => {
   return result;
 };
 
-export const getStaffById = async (id) => {
+export const getStaffById = async (id: string) => {
   const result = await Staff.findByPk(id);
   return result;
 };
-
-export const createStaff = async ({
-  idNasa,
-  camera,
-  img_src,
-  earth_date,
-}) => {
+//@ts-ignore
+export const createStaff = async ({ idNasa, camera, img_src, earth_date }) => {
   const result = await Staff.create({ idNasa, camera, img_src, earth_date });
   return result;
 };
-
+//@ts-ignore
 export const updateStaff = async (id, data) => {
   const result = await Staff.update(
     data,
@@ -39,7 +34,7 @@ export const updateStaff = async (id, data) => {
   return result;
 };
 
-export const removeStaff = async (id) => {
+export const removeStaff = async (id: string) => {
   await Staff.destroy({
     where: {
       id,

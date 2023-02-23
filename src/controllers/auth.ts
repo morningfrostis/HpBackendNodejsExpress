@@ -1,7 +1,7 @@
 const db = require("../models");
 const User = db.user;
 import bcrypt from "bcrypt";
-import jsonwebtoken from  'jsonwebtoken'
+import jsonwebtoken from "jsonwebtoken";
 import { getUserByEmail } from "./user";
 const saltRounds = 10;
 

@@ -1,205 +1,51 @@
-const db = require('../models')
-const Characters = db.characters
-const Students = db.students
-const Staff = db.staff
-const Spells = db.spells
+import db from "../models";
+//@ts-ignore
+const Data = db.data;
 
+//Declaramos la función que llama a la api de la nasa
 
-async function getDataCharacters() {
+async function getApi() {
+  try {
+    console.log("EJECUTANDO GET API");
 
-    console.log('ejecutando api')
+    const response = await fetch(
+      "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=" +
+        process.env.APIKEY
+    );
+    const roversList = await response.json();
 
-    try {
+    const roverPhoto = roversList.photos;
 
-        const response = await fetch('https://hp-api.onrender.com/api/characters')
-        const data = await response.json()        
-       
-        const dataResults = data.map(d => ({
-            charactersId: d.id,
-            name: d.name,
-            species: d.species,
-            house: d.house,
-            wizard: d.wizard,
-            ancestry: d.ancestry,
-            wand: d.wand,
-            patronus: d.patronus,
-            actor: d.actor,
-            image: d.image
-        }));
-        
-        const itemstoCreation = []
-        const existedResults = await Characters.findAll()
-        console.log(existedResults)
+    const newList = roverPhoto.map((rover) => ({
+      idNasa: rover.id,
+      camera: rover.camera,
+      img_src: rover.img_src,
+      earth_date: rover.earth_date,
+    }));
 
-        for (const item of dataResults) {
-            const match = existedResults.find((existedResult) => existedResult.charactersId === item.charactersId)
-            if (!match) {
-                //@ts-ignore
-                itemstoCreation.push(item)
-            }
-        }
-        // console.log(itemstoCreation)
-        
-        if (itemstoCreation.length > 0) {
-            Characters.bulkCreate(itemstoCreation)
-            return 'Sincronizando base de datos'
-        }
+    // Controlar documentos duplicados y sincronización
+    const itemsToCreate = [];
+    const existedItems = await Data.findAll();
 
-        return 'No hay datos nuevos para guardar en la base de datos'
+    for (const item of newList) {
+      const existed = existedItems.find(
+        (existedItem) => existedItem.idNasa === item.idNasa
+      );
+      if (!existed) {
+        //@ts-ignore
+        itemsToCreate.push(item);
+      }
     }
-    catch (error) {
-        console.log(error.message)
-
+    if (itemsToCreate.length > 0) {
+      Data.bulkCreate(itemsToCreate);
+      return "DATOS SINCRONIZADOS Y GUARDADOS EN LA BASE DE DATOS";
     }
+
+    return "NO HAY DATOS NUEVOS PARA GUARDAR EN LA BASE DE DATOS";
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-async function getDataStudents() {
-
-    console.log('ejecutando api')
-
-    try {
-
-        const response = await fetch('https://hp-api.onrender.com/api/characters/students')
-        const data = await response.json()
-        
-        
-       
-        const dataResults = data.map(d => ({
-            studentsId: d.id,
-            name: d.name,
-            species: d.species,
-            house: d.house,
-            wizard: d.wizard,
-            ancestry: d.ancestry,
-            wand: d.wand,
-            patronus: d.patronus,
-            actor: d.actor,
-            image: d.image
-        }));
-        
-        const itemstoCreation = []
-        const existedResults = await Students.findAll()
-        console.log(existedResults)
-
-        for (const item of dataResults) {
-            const match = existedResults.find((existedResult) => existedResult.studentsId === item.studentsId)
-            if (!match) {
-                //@ts-ignore
-                itemstoCreation.push(item)
-            }
-        }
-        // console.log(itemstoCreation)
-        
-        if (itemstoCreation.length > 0) {
-            Characters.bulkCreate(itemstoCreation)
-            return 'Sincronizando base de datos'
-        }
-
-        return 'No hay datos nuevos para guardar en la base de datos'
-    }
-    catch (error) {
-        console.log(error.message)
-
-    }
-}
-
-async function getDataStaff() {
-
-    console.log('ejecutando api')
-
-    try {
-
-        const response = await fetch('https://hp-api.onrender.com/api/characters/staff')
-        const data = await response.json()
-        
-        
-       
-        const dataResults = data.map(d => ({
-            staffId: d.id,
-            name: d.name,
-            species: d.species,
-            house: d.house,
-            wizard: d.wizard,
-            ancestry: d.ancestry,
-            wand: d.wand,
-            patronus: d.patronus,
-            actor: d.actor,
-            image: d.image
-        }));
-        
-        const itemstoCreation = []
-        const existedResults = await Staff.findAll()
-        console.log(existedResults)
-
-        for (const item of dataResults) {
-            const match = existedResults.find((existedResult) => existedResult.staffId === item.staffId)
-            if (!match) {
-                //@ts-ignore
-                itemstoCreation.push(item)
-            }
-        }
-        // console.log(itemstoCreation)
-        
-        if (itemstoCreation.length > 0) {
-            Characters.bulkCreate(itemstoCreation)
-            return 'Sincronizando base de datos'
-        }
-
-        return 'No hay datos nuevos para guardar en la base de datos'
-    }
-    catch (error) {
-        console.log(error.message)
-
-    }
-}
-
-async function getDataSpells() {
-
-    console.log('ejecutando api')
-
-    try {
-
-        const response = await fetch('https://hp-api.onrender.com/api/spells')
-        const data = await response.json()
-        
-        
-       
-        const dataResults = data.map(d => ({
-            spellsId: d.id,
-            name: d.name,
-            description: d.description,
-        }));
-        
-        const itemstoCreation = []
-        const existedResults = await Spells.findAll()
-        console.log(existedResults)
-
-        for (const item of dataResults) {
-            const match = existedResults.find((existedResult) => existedResult.spellsId === item.spellsId)
-            if (!match) {
-                //@ts-ignore
-                itemstoCreation.push(item)
-            }
-        }
-        // console.log(itemstoCreation)
-        
-        if (itemstoCreation.length > 0) {
-            Characters.bulkCreate(itemstoCreation)
-            return 'Sincronizando base de datos'
-        }
-
-        return 'No hay datos nuevos para guardar en la base de datos'
-    }
-    catch (error) {
-        console.log(error.message)
-
-    }
-}
-
-
-module.exports = {
-    getDataCharacters,
-    getDataStudents,
-    getDataStaff,
-    getDataSpells
-}
+//Exportamos la función para usarla en 'obtenerTodos' (nuestro GetAll) en controllerNasa.js
+export default getApi;

@@ -8,22 +8,17 @@ export const getSpells = async () => {
   return result;
 };
 
-export const getSpellsById = async (id) => {
+export const getSpellsById = async (id: string) => {
   const result = await Spells.findByPk(id);
   return result;
 };
-
-export const createSpells = async ({
-  idNasa,
-  camera,
-  img_src,
-  earth_date,
-}) => {
+//@ts-ignore
+export const createSpells = async ({ idNasa, camera, img_src, earth_date }) => {
   const result = await Spells.create({ idNasa, camera, img_src, earth_date });
   return result;
 };
-
-export const updateSpells = async (id, data) => {
+//@ts-ignore
+export const updateSpells = async (id: string, data) => {
   const result = await Spells.update(
     data,
     {
@@ -39,7 +34,7 @@ export const updateSpells = async (id, data) => {
   return result;
 };
 
-export const removeSpells = async (id) => {
+export const removeSpells = async (id: string) => {
   await Spells.destroy({
     where: {
       id,
