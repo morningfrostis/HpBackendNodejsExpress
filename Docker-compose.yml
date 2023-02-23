@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  db:
+    container_name: 'harrypotterpostgres'
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: 'harrypotter'
+      POSTGRES_DB: 'harrypotter'
+      POSTGRES_PASSWORD: 'harrypotter'
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
